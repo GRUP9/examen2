@@ -1,45 +1,38 @@
 package com.example.examen2
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.example.examen2.ui.composables.PostList
-import com.example.examen2.ui.viewmodel.PostViewModel
-import kotlinx.coroutines.launch
+import androidx.room.Room
+import com.example.examen2.data.api.RetrofitInstance
+import com.example.examen2.data.db.PostDatabase
+import com.example.examen2.data.repository.PostRepository
+import com.example.examen2.ui.PostListScreen
+import com.example.examen2.viewmodel.PostViewModel
+import com.example.examen2.viewmodel.PostViewModelFactory
 
 class MainActivity : ComponentActivity() {
-    private lateinit var postViewModel: PostViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val db = Room.databaseBuilder(applicationContext, PostDatabase::class.java, "post_db")
+            .fallbackToDestructiveMigration()
+            .build()
+
+
+        val repository = PostRepository(RetrofitInstance.api, db.postDao())
+
+
+        val viewModelFactory = PostViewModelFactory(repository)
+        val viewModel = ViewModelProvider(this, viewModelFactory).get(PostViewModel::class.java)
+
         setContent {
 
-            PostList()
-        }
-
-
-        postViewModel = ViewModelProvider(this).get(PostViewModel::class.java)
-
-
-        obtenerPosts()
-    }
-
-    private fun obtenerPosts() {
-
-        lifecycleScope.launch {
-            try {
-                val posts = postViewModel.fetchPosts()
-                posts?.forEach {
-                    println("Post: ${it.title}")
-                }
-            } catch (e: Exception) {
-
-                Toast.makeText(applicationContext, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+            PostListScreen(viewModel)
         }
     }
 }
+
 

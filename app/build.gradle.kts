@@ -1,6 +1,3 @@
-import org.apache.tools.ant.util.JavaEnvUtils.VERSION_1_8
-import org.gradle.kotlin.dsl.support.kotlinCompilerOptions
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -56,7 +53,18 @@ android {
 }
 
 dependencies {
+    // Dependencias básicas para Jetpack Compose
+    implementation ("androidx.compose.ui:ui:1.4.0")
+    implementation ("androidx.compose.material:material:1.4.0")
+    implementation ("androidx.compose.ui:ui-tooling-preview:1.4.0")
 
+    // Dependencias adicionales (si es necesario)
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation ("androidx.activity:activity-compose:1.6.1")
+    implementation ("com.google.code.gson:gson:2.8.8'")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation(libs.gson)
     // Room database
     val room_version = "2.6.1"
 
@@ -89,6 +97,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
 
 
+
+
     implementation(libs.retrofit)
 
     implementation(libs.retrofit2.kotlin.coroutines.adapter)
@@ -96,7 +106,7 @@ dependencies {
 
 
     implementation(libs.moshi.kotlin)
-    implementation (libs.moshi.converter)
+    implementation(libs.moshi.converter)
     ksp(libs.moshi.codegen)
 
 
@@ -122,6 +132,5 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-
 
 }
